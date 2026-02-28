@@ -1,16 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
 
-async function trackClick(id: string) {
-  fetch("/api/click", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
-  });
-}
-
-// ────────────────────────────────────────────
-// Supabase
-// ────────────────────────────────────────────
 const supabase = createClient(
   process.env.SUPABASE_URL!,
   process.env.SUPABASE_ANON_KEY!
@@ -18,9 +7,6 @@ const supabase = createClient(
 
 export const dynamic = "force-dynamic";
 
-// ────────────────────────────────────────────
-// Types
-// ────────────────────────────────────────────
 type Store = {
   slug: string;
   name: string;
@@ -38,9 +24,6 @@ type StoreItem = {
   sort_order: number;
 };
 
-// ────────────────────────────────────────────
-// Helpers
-// ────────────────────────────────────────────
 function resolveImage(item: StoreItem): string | null {
   if (item.image_url) return item.image_url;
   if (item.main_image_url) return item.main_image_url;
@@ -49,9 +32,6 @@ function resolveImage(item: StoreItem): string | null {
   return typeof first === "string" ? first : first.url;
 }
 
-// ────────────────────────────────────────────
-// Page
-// ────────────────────────────────────────────
 export default async function Page({
   params,
 }: {
@@ -78,7 +58,6 @@ export default async function Page({
     <>
       <style>{styles}</style>
       <div className="page">
-
         <header className="header">
           <div className="header-eyebrow">SELECT ITEMS</div>
           <h1 className="header-title">{store.name}</h1>
@@ -101,13 +80,12 @@ export default async function Page({
                   className={`card ${isFeature ? "card--feature" : ""}`}
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
-                 <a
-  href={item.affiliate_url}
-  target="_blank"
-  rel="noreferrer"
-  className="card-link"
-  onClick={() => trackClick(item.id)}
->
+                  <a
+                    href={item.affiliate_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="card-link"
+                  >
                     <div className="card-image-wrap">
                       {img ? (
                         <img src={img} alt={title} className="card-image" />
@@ -121,7 +99,6 @@ export default async function Page({
                         <div className="card-badge">PICK UP</div>
                       )}
                     </div>
-
                     <div className="card-body">
                       <div className="card-index">
                         {String(i + 1).padStart(2, "0")}
@@ -164,16 +141,9 @@ const styles = `
     -webkit-font-smoothing: antialiased;
   }
 
-  .page {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 0 0 80px;
-  }
+  .page { max-width: 480px; margin: 0 auto; padding: 0 0 80px; }
 
-  .header {
-    padding: 48px 24px 32px;
-    text-align: center;
-  }
+  .header { padding: 48px 24px 32px; text-align: center; }
 
   .header-eyebrow {
     font-family: 'Playfair Display', serif;
@@ -188,7 +158,6 @@ const styles = `
     font-size: 28px;
     font-weight: 900;
     line-height: 1.2;
-    letter-spacing: -0.01em;
     color: var(--ink);
   }
 
@@ -197,7 +166,6 @@ const styles = `
     font-size: 12px;
     color: var(--muted);
     line-height: 1.8;
-    font-weight: 300;
   }
 
   .header-rule {
@@ -207,38 +175,19 @@ const styles = `
     background: var(--accent);
   }
 
- .grid {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* ← 2列 */
-  gap: 12px;
-  padding: 0 16px;
-}
+  .grid { list-style: none; display: flex; flex-direction: column; gap: 2px; padding: 0 16px; }
 
-  .card {
-    opacity: 0;
-    animation: fadeUp 0.5s ease forwards;
-  }
+  .card { opacity: 0; animation: fadeUp 0.5s ease forwards; }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    background: var(--white);
-  }
+  .card-link { display: block; text-decoration: none; color: inherit; background: var(--white); }
 
-  .card--feature .card-image-wrap {grid-column: span 2;
-    aspect-ratio: 3 / 4;
-  }
-
-  .card--feature .card-title {
-    font-size: 16px;
-  }
+  .card--feature .card-image-wrap { aspect-ratio: 3 / 4; }
+  .card--feature .card-title { font-size: 16px; }
 
   .card-image-wrap {
     position: relative;
@@ -249,101 +198,59 @@ const styles = `
   }
 
   .card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    width: 100%; height: 100%; object-fit: cover; display: block;
     transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .card-link:hover .card-image {
-    transform: scale(1.06);
-  }
+  .card-link:hover .card-image { transform: scale(1.06); }
 
   .card-overlay {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background: rgba(26, 23, 20, 0.55);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.3s ease;
   }
 
-  .card-link:hover .card-overlay {
-    opacity: 1;
-  }
+  .card-link:hover .card-overlay { opacity: 1; }
 
   .card-overlay-text {
     font-family: 'Playfair Display', serif;
-    font-size: 14px;
-    color: var(--white);
+    font-size: 14px; color: var(--white);
     letter-spacing: 0.1em;
     border-bottom: 1px solid var(--accent);
     padding-bottom: 4px;
   }
 
   .card-badge {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: var(--accent);
-    color: var(--white);
-    font-size: 9px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    padding: 4px 10px;
+    position: absolute; top: 16px; left: 16px;
+    background: var(--accent); color: var(--white);
+    font-size: 9px; font-weight: 500;
+    letter-spacing: 0.2em; padding: 4px 10px;
   }
 
   .card-body {
     padding: 16px 20px 20px;
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
+    display: flex; align-items: flex-start; gap: 12px;
     border-bottom: 1px solid #e8e4dc;
   }
 
   .card-index {
     font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 900;
-    color: #000;
-    line-height: 1;
-    flex-shrink: 0;
-    margin-top: 2px;
+    font-size: 22px; font-weight: 900;
+    color: #d9d4ca; line-height: 1;
+    flex-shrink: 0; margin-top: 2px;
   }
 
-  .card-title {
-    font-size: 13px;
-    font-weight: 400;
-    line-height: 1.6;
-    color: var(--ink);
-    flex: 1;
-
-    display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
-  }
+  .card-title { font-size: 13px; font-weight: 400; line-height: 1.6; color: var(--ink); flex: 1; }
 
   .card-cta {
-  color: #000;
-  font-weight: 700;
-
     font-family: 'Playfair Display', serif;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-    margin-top: 3px;
+    font-size: 11px; color: var(--accent);
+    letter-spacing: 0.05em; flex-shrink: 0; margin-top: 3px;
   }
 
-  .footer {
-    text-align: center;
-    padding: 48px 24px 0;
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-  }
+  .footer { text-align: center; padding: 48px 24px 0; font-size: 10px; color: var(--muted); letter-spacing: 0.15em; }
 `;
+
+
+
