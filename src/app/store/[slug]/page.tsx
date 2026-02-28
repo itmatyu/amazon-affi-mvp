@@ -207,13 +207,13 @@ const styles = `
     background: var(--accent);
   }
 
-  .grid {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding: 0 16px;
-  }
+ .grid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ← 2列 */
+  gap: 12px;
+  padding: 0 16px;
+}
 
   .card {
     opacity: 0;
@@ -232,7 +232,7 @@ const styles = `
     background: var(--white);
   }
 
-  .card--feature .card-image-wrap {
+  .card--feature .card-image-wrap {grid-column: span 2;
     aspect-ratio: 3 / 4;
   }
 
@@ -320,6 +320,7 @@ const styles = `
     line-height: 1.6;
     color: var(--ink);
     flex: 1;
+
     display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
