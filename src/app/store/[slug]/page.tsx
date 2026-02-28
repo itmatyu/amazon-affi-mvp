@@ -1,5 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 
+async function trackClick(id: string) {
+  fetch("/api/click", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
+}
+
 // ────────────────────────────────────────────
 // Supabase
 // ────────────────────────────────────────────
@@ -93,12 +101,13 @@ export default async function Page({
                   className={`card ${isFeature ? "card--feature" : ""}`}
                   style={{ animationDelay: `${i * 80}ms` }}
                 >
-                  <a
-                    href={item.affiliate_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="card-link"
-                  >
+                 <a
+  href={item.affiliate_url}
+  target="_blank"
+  rel="noreferrer"
+  className="card-link"
+  onClick={() => trackClick(item.id)}
+>
                     <div className="card-image-wrap">
                       {img ? (
                         <img src={img} alt={title} className="card-image" />
@@ -299,7 +308,7 @@ const styles = `
     font-family: 'Playfair Display', serif;
     font-size: 22px;
     font-weight: 900;
-    color: #d9d4ca;
+    color: #000;
     line-height: 1;
     flex-shrink: 0;
     margin-top: 2px;
@@ -311,9 +320,16 @@ const styles = `
     line-height: 1.6;
     color: var(--ink);
     flex: 1;
+    display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
   }
 
   .card-cta {
+  color: #000;
+  font-weight: 700;
+
     font-family: 'Playfair Display', serif;
     font-size: 11px;
     color: var(--accent);
